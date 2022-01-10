@@ -1,23 +1,37 @@
-import logo from './logo.svg';
 import './App.css';
+import {useState, useEffect} from 'react'
 
 function App() {
+
+  const [polls, setPolls] = useState([])
+
+  useEffect( async () => {
+    const polls = await fetch('http://localhost:3030/api/polls')
+    setPolls(polls)
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {
+        polls.data.map((poll) => {
+          return (
+            <div key={poll._id}>
+              <h2>poll.title</h2>
+              <ul>
+                {
+                  poll.options.map((option) => {
+                    return (
+                      <li key={option._id}>
+                        {option.option} <span>{option.votes}</span>
+                      </li>
+                    )
+                  })
+                }
+              </ul>
+            </div>
+          )
+        })
+      }
     </div>
   );
 }
